@@ -1,5 +1,6 @@
 package org.mytest.io;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class LineBasedInputStreamWrapper extends AbstractInputStream {
     /**
-     * 流End-of-File标记
+     * 读取到流End-of-File标记
      */
     private boolean eof = false;
     private final long maxDataLength;
@@ -47,6 +48,8 @@ public class LineBasedInputStreamWrapper extends AbstractInputStream {
 
     /**
      * 按行读取
+     * <p>参考了Netty的LineBasedFrameDecoder</p>
+     * <p>类似{@link BufferedReader#readLine()}</p>
      *
      * @return 单行字节数组
      * @throws IOException ..

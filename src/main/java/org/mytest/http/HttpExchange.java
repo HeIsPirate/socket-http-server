@@ -20,14 +20,14 @@ public class HttpExchange {
     private String method;
     private URI uri;
     private Map<String, List<String>> requestHeaders = new HashMap<>();
-    private final InputStream inputStream;
+    private final InputStream bodyInputStream;
 
     private int responseCode;
     private final Map<String, List<String>> responseHeaders = new HashMap<>();
     private final HttpOutputStreamWrapper outputStream;
 
-    public HttpExchange(InputStream inputStream, HttpOutputStreamWrapper outputStream) {
-        this.inputStream = inputStream;
+    public HttpExchange(InputStream bodyInputStream, HttpOutputStreamWrapper outputStream) {
+        this.bodyInputStream = bodyInputStream;
         this.outputStream = outputStream;
     }
 
@@ -81,9 +81,7 @@ public class HttpExchange {
         InputStream bodyInputStream = bodyIsChunked
                 ? new ChunkedInputStreamWrapper(httpInputStream)
                 : new LineBasedInputStreamWrapper(httpInputStream,
-                CollectionUtils.isEmpty(contentLengths)
-                        ? 0
-                        : Long.parseLong(contentLengths.get(0)));
+                CollectionUtils.isEmpty(contentLengths) ? 0 : Long.parseLong(contentLengths.get(0)));
 
         HttpOutputStreamWrapper httpOutputStream = new HttpOutputStreamWrapper(socket.getOutputStream());
 
@@ -127,7 +125,7 @@ public class HttpExchange {
     }
 
     public InputStream getInputStream() {
-        return inputStream;
+        return bodyInputStream;
     }
 
     public OutputStream getOutputStream() {

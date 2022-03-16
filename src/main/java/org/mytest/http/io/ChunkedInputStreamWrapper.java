@@ -7,6 +7,8 @@ import java.io.InputStream;
 
 /**
  * Chunked协议请求体
+ * <p>继承{@link LineBasedInputStreamWrapper}是因为, chunked也需要按行读取</p>
+ * <p>未完...</p>
  */
 public class ChunkedInputStreamWrapper extends LineBasedInputStreamWrapper {
     private Long unReadChunkedLength;
@@ -25,6 +27,7 @@ public class ChunkedInputStreamWrapper extends LineBasedInputStreamWrapper {
             }
         }
         // len <= unread
+        // 说明读取未结束
         if (unReadChunkedLength.compareTo((long) len) >= 0) {
             int readLength = super.read(bytes, off, len);
             this.unReadChunkedLength += len;
